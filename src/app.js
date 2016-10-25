@@ -61,7 +61,7 @@ function processEvent(event) {
                                     sendFBMessage(sender, facebookMessage, callback);
                                 }
                             } catch (err) {
-                                sendFBMessage(sender, {text: err.message});
+                                sendFBMessage(sender, {text: err.message}, callback);
                             }
                         });
                     }
