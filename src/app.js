@@ -50,15 +50,15 @@ function processEvent(event) {
                             sendFBMessage(sender, {text: err.message});
                         }
                     } else {
-                        responseData.facebook.forEach((facebookMessage) => {
+                        async.eachSeries(responseData.facebook, (facebookMessage, callback) => {
                             try {
                                 if (facebookMessage.sender_action) {
                                     console.log('Response as sender action');
-                                    sendFBSenderAction(sender, facebookMessage.sender_action);
+                                    sendFBSenderAction(sender, facebookMessage.sender_action, callback);
                                 }
                                 else {
                                     console.log('Response as formatted message');
-                                    sendFBMessage(sender, facebookMessage);
+                                    sendFBMessage(sender, facebookMessage, callback);
                                 }
                             } catch (err) {
                                 sendFBMessage(sender, {text: err.message});
