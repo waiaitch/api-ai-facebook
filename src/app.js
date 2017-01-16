@@ -25,14 +25,18 @@ function processEvent(event) {
         // Handle a text message from this sender
 
         if (!sessionIds.has(sender)) {
-            sessionIds.set(sender, uuid.v1());
+            sessionIds.set(sender, uuid.v4());
         }
 
         console.log("Text", text);
 
         let apiaiRequest = apiAiService.textRequest(text,
             {
-                sessionId: sessionIds.get(sender)
+                sessionId: sessionIds.get(sender),
+                originalRequest: {
+                    data: event,
+                    source: "facebook"
+                }
             });
 
         apiaiRequest.on('response', (response) => {
