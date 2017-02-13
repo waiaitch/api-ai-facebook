@@ -18,10 +18,10 @@ const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: APIAI_LANG, requestSou
 const sessionIds = new Map();
 
 function processEvent(event) {
-    var sender = event.sender.id.toString();
+    const sender = event.sender.id.toString();
 
     if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
-        var text = event.message ? event.message.text : event.postback.payload;
+        const text = event.message ? event.message.text : event.postback.payload;
         // Handle a text message from this sender
 
         if (!sessionIds.has(sender)) {
@@ -73,7 +73,7 @@ function processEvent(event) {
                     console.log('Response as text message');
                     // facebook API limit for text length is 320,
                     // so we must split message if needed
-                    var splittedText = splitResponse(responseText);
+                    let splittedText = splitResponse(responseText);
 
                     async.eachSeries(splittedText, (textPart, callback) => {
                         sendFBMessage(sender, {text: textPart}, callback);
@@ -97,9 +97,9 @@ function splitResponse(str) {
 }
 
 function chunkString(s, len) {
-    var curr = len, prev = 0;
+    let curr = len, prev = 0;
 
-    var output = [];
+    let output = [];
 
     while (s[curr]) {
         if (s[curr++] == ' ') {
@@ -108,7 +108,7 @@ function chunkString(s, len) {
             curr += len;
         }
         else {
-            var currReverse = curr;
+            let currReverse = curr;
             do {
                 if (s.substring(currReverse - 1, currReverse) == ' ') {
                     output.push(s.substring(prev, currReverse));
@@ -213,7 +213,7 @@ app.get('/webhook/', (req, res) => {
 
 app.post('/webhook/', (req, res) => {
     try {
-        var data = JSONbig.parse(req.body);
+        const data = JSONbig.parse(req.body);
 
         if (data.entry) {
             let entries = data.entry;
