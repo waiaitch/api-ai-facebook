@@ -297,4 +297,41 @@ describe('app', () => {
 
         result.should.deepEqual(expected);
     });
+
+    it("getEventText should get right text", () => {
+
+        const fbBot = app.__get__('facebookBot');
+        const getEventText = fbBot.getEventText;
+
+        should(getEventText({})).be.equal(null);
+        should(getEventText({message: {}})).be.equal(null);
+
+        const expectedText = 'expectedText';
+
+        const simpleMessage = {
+            "message": {
+                "text": expectedText,
+            }
+        };
+        getEventText(simpleMessage).should.be.equal(expectedText);
+
+        const postbackMessage = {
+            "postback": {
+                "payload": expectedText
+            }
+        };
+        getEventText(postbackMessage).should.be.equal(expectedText);
+
+        const quickReplyMessage = {
+            "message": {
+                "text": "Red",
+                "quick_reply": {
+                    "payload": expectedText
+                }
+            }
+        };
+        getEventText(quickReplyMessage).should.be.equal(expectedText);
+
+    });
+
 });

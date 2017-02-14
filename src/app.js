@@ -224,13 +224,32 @@ class FacebookBot {
         });
     }
 
+    getEventText(event) {
+        if (event.message) {
+            if (event.message.quick_reply && event.message.quick_reply.payload) {
+                return event.message.quick_reply.payload;
+            }
+
+            if (event.message.text) {
+                return event.message.text;
+            }
+        }
+
+        if (event.postback && event.postback.payload) {
+            return event.postback.payload;
+        }
+
+        return null;
+
+    }
+
     processEvent(event) {
         const sender = event.sender.id.toString();
+        const text = this.getEventText(event);
 
-        if ((event.message && event.message.text) || (event.postback && event.postback.payload)) {
-            const text = event.message ? event.message.text : event.postback.payload;
+        if (text) {
+
             // Handle a text message from this sender
-
             if (!this.sessionIds.has(sender)) {
                 this.sessionIds.set(sender, uuid.v4());
             }
