@@ -13,6 +13,7 @@ const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
 const APIAI_LANG = process.env.APIAI_LANG || 'en';
 const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
+const FB_TEXT_LIMIT = 640;
 
 class FacebookBot {
     constructor() {
@@ -213,7 +214,7 @@ class FacebookBot {
 
     doTextResponse(sender, responseText) {
         console.log('Response as text message');
-        // facebook API limit for text length is 320,
+        // facebook API limit for text length is 640,
         // so we must split message if needed
         let splittedText = this.splitResponse(responseText);
 
@@ -292,11 +293,11 @@ class FacebookBot {
     }
 
     splitResponse(str) {
-        if (str.length <= 320) {
+        if (str.length <= FB_TEXT_LIMIT) {
             return [str];
         }
 
-        return this.chunkString(str, 300);
+        return this.chunkString(str, FB_TEXT_LIMIT);
     }
 
     chunkString(s, len) {
