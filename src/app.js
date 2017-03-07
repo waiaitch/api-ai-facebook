@@ -58,6 +58,7 @@ class FacebookBot {
             let message = messages[messageIndex];
 
             switch (message.type) {
+                //message.type 0 means text message
                 case 0:
                     // speech: ["hi"]
                     // we have to get value from fulfillment.speech, because of here is raw speech
@@ -71,7 +72,7 @@ class FacebookBot {
                     }
 
                     break;
-
+                //message.type 1 means card message
                 case 1: {
                     let carousel = [message];
 
@@ -95,7 +96,7 @@ class FacebookBot {
                         if (this.isDefined(c.subtitle)) {
                             card.subtitle = c.subtitle;
                         }
-
+                        //If button is involved in.
                         if (c.buttons.length > 0) {
                             let buttons = [];
                             for (let buttonIndex = 0; buttonIndex < c.buttons.length; buttonIndex++) {
@@ -143,7 +144,7 @@ class FacebookBot {
                 }
 
                     break;
-
+                //message.type 2 means quick replies message
                 case 2: {
                     if (message.replies && message.replies.length > 0) {
                         let facebookMessage = {};
@@ -164,7 +165,7 @@ class FacebookBot {
                 }
 
                     break;
-
+                //message.type 3 means image message
                 case 3:
 
                     if (message.imageUrl) {
@@ -178,7 +179,7 @@ class FacebookBot {
                     }
 
                     break;
-
+                //message.type 4 means custom payload message
                 case 4:
                     if (message.payload && message.payload.facebook) {
                         facebookMessages.push(message.payload.facebook);
@@ -223,7 +224,7 @@ class FacebookBot {
                 .catch(err => callback(err));
         });
     }
-
+    //which webhook event
     getEventText(event) {
         if (event.message) {
             if (event.message.quick_reply && event.message.quick_reply.payload) {
@@ -255,7 +256,7 @@ class FacebookBot {
             }
 
             console.log("Text", text);
-
+            //send user's text to api.ai service
             let apiaiRequest = this.apiAiService.textRequest(text,
                 {
                     sessionId: this.sessionIds.get(sender),
@@ -264,7 +265,7 @@ class FacebookBot {
                         source: "facebook"
                     }
                 });
-
+            //get response from api.ai
             apiaiRequest.on('response', (response) => {
                 if (this.isDefined(response.result) && this.isDefined(response.result.fulfillment)) {
                     let responseText = response.result.fulfillment.speech;
